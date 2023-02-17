@@ -54,11 +54,17 @@ jobs:
        with:
         version: latest  
      - name: Run OPA 
+       id: opa
        run: |
-         result=$( opa exec --decision terraform/topics/deny  --bundle policy/ plan.json )
-         echo "OPA_RESULT=$result" >> "$GITHUB_ENV" 
+         opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
+         content=`cat ./opa.json`
+         content="${content//'%'/'%25'}"
+         content="${content//$'\n'/'%0A'}"
+         content="${content//$'\r'/'%0D'}" 
+         echo "::set-output name=opaResult::$content" 
        # if: github.event_name == 'pull_request'
      - name: Check OPA 
-       run: echo "$OPA_RESULT"
+       run: |
+         echo "${{fromJson(steps.opa.outputs.opaResult).result}}"
        
  
