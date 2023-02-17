@@ -25,7 +25,7 @@ topics = [
   },
   {
    name       = "opa_testing2"
-   partitions = 11  
+   partitions = 12  
    config = {
      "cleanup.policy"                          = "delete"
      "compression.type"                        = "producer"
