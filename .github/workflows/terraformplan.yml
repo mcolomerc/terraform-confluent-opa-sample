@@ -44,7 +44,7 @@ jobs:
        # if: github.event_name == 'pull_request'
        run: |
          terraform plan -var-file="topics.tfvars" --out planfile -input=false
-         terraform show -var-file="topic.tfvars" -json planfile > plan.json  
+         terraform show -json planfile > plan.json  
        continue-on-error: false
      - name: Terraform Plan Status
        if: steps.plan.outcome == 'failure'
