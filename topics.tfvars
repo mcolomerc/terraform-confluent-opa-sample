@@ -31,4 +31,5 @@ topics = [
      "compression.type"                        = "producer"
      "delete.retention.ms"                     = "86400000" 
    }
+  }
 ]# end topics
