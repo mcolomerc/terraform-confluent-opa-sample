@@ -6,6 +6,7 @@ name: CI
 on: 
   pull_request:
     # Trigger the worflow on pull request event for main branch
+    types: [opened, edited, reopened]
     branches:
       - main
 
