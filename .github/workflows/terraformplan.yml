@@ -58,7 +58,7 @@ jobs:
        run: |
          opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
          RESULT=`jq ".result[0].result | length" opa.json`
-         if [ "$RESULT" -ge 0 ]; then
+         if [ "$RESULT" -gt "0" ]; then
           jq '.result[0].result' opa.json
           exit 1
          fi
