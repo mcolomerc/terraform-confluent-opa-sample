@@ -37,7 +37,7 @@ jobs:
        run: terraform init 
      - name: Terraform plan
        id: plan
-       if: github.event_name == 'pull_request'
+       # if: github.event_name == 'pull_request'
        run: terraform plan -var-file="topics.tfvars" --out planfile -input=false
        continue-on-error: true
      - name: Terraform Plan Status
@@ -45,7 +45,7 @@ jobs:
        run: exit 1
      - name: Terraform Show
        id: show
-       if: github.event_name == 'pull_request'
+       # if: github.event_name == 'pull_request'
        run: terraform show -var-file="topic.tfvars" -json planfile > plan.json
        continue-on-error: true
      - name: Setup OPA
@@ -56,7 +56,7 @@ jobs:
        run: |
          result=$( opa exec --decision terraform/topics/deny  --bundle policy/ plan.json )
          echo "OPA_RESULT=$result" >> "$GITHUB_ENV" 
-       if: github.event_name == 'pull_request'
+       # if: github.event_name == 'pull_request'
      - name: Check OPA 
        run: echo "$OPA_RESULT"
        
