@@ -64,7 +64,12 @@ jobs:
          echo "::set-output name=opaResult::$content" 
        # if: github.event_name == 'pull_request'
      - name: Check OPA 
+       id: check
        run: |
-         echo "${{fromJson(steps.opa.outputs.opaResult).result}}"
-       
+         RESULT=echo "${{fromJson(steps.opa.outputs.opaResult).result[0].result}}"
+         if $RESULT!="" ; then
+          echo $RESULT
+          exit 1
+         fi
+     
  
