@@ -57,19 +57,9 @@ jobs:
        id: opa
        run: |
          opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
-         content=`cat ./opa.json`
-         content="${content//'%'/'%25'}"
-         content="${content//$'\n'/'%0A'}"
-         content="${content//$'\r'/'%0D'}" 
-         echo "::set-output name=opaResult::$content" 
-       # if: github.event_name == 'pull_request'
-     - name: Check OPA 
-       id: check
-       run: |
-         RESULT=echo "${{fromJson(steps.opa.outputs.opaResult).result[0].result}}"
-         if $RESULT!="" ; then
+         RESULT=echo "`jq '.result[0].result' opa.json `" 
+         if $RESULT!="[]" ; then
           echo $RESULT
           exit 1
          fi
-     
  
