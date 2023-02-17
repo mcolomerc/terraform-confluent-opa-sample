@@ -24,7 +24,7 @@ topics = [
    }
   },
   {
-   name       = "opa_testing2"
+   name       = "opa_testing_2"
    partitions = 10  
    config = {
      "cleanup.policy"                          = "delete"
