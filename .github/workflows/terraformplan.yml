@@ -43,6 +43,7 @@ jobs:
        run: |
          terraform plan -var-file="topics.tfvars" --out planfile -input=false
          terraform show -json planfile > plan.json  
+         pwd
        continue-on-error: false
      - name: Terraform Plan Status
        if: steps.plan.outcome == 'failure'
@@ -54,7 +55,9 @@ jobs:
      - name: Run OPA 
        id: opa
        run: |
+         pwd
          opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
+         cat opa.json
          RESULT=`jq ".result[0].result | length" opa.json`
          echo $RESULT
          if [ "$RESULT" -gt "0" ]; then
