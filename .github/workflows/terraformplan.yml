@@ -3,11 +3,7 @@
 name: CI
 
 # Controls when the workflow will run
-on:
-  push:
-    # Trigger the worflow on push event for all branches
-    branches:
-      - '**'  
+on: 
   pull_request:
     # Trigger the worflow on pull request event for main branch
     branches:
@@ -60,11 +56,13 @@ jobs:
        run: |
          opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
          RESULT=`jq ".result[0].result | length" opa.json`
+         echo $RESULT
          if [ "$RESULT" -gt "0" ]; then
           jq '.result[0].result' opa.json
+          echo "OPA errors"
           exit 1
          fi
      - name: Terraform Apply 
        id: apply 
-       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+       if: github.event.pull_request.merged == true
        run: terraform apply -var-file="topics.tfvars" -auto-approve -input=false
