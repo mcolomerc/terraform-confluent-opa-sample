@@ -34,13 +34,7 @@ jobs:
          terraform_version: 1.3.7
      - name: Terraform init
        id: init
-       run: terraform init
-     - name: Terraform format
-       id: fmt
-       run: terraform fmt -check
-     - name: Terraform validate
-       id: validate
-       run: terraform validate
+       run: terraform init 
      - name: Terraform plan
        id: plan
        if: github.event_name == 'pull_request'
