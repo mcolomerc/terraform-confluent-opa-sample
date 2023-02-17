@@ -55,6 +55,7 @@ jobs:
        id: opa
        run: |
          cat topics.tfvars
+         opa version
          opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
          cat opa.json
          RESULT=`jq ".result[0].result | length" opa.json`
