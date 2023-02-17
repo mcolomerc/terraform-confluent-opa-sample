@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  terraform:
+   name: "Terraform Infrastructure Change Management"
+   runs-on: ubuntu-latest
+   defaults:
+     run:
+       shell: bash
+       # We keep Terraform files in the terraform directory.
+       working-directory: ./
+   steps:
+     - name: Checkout the repository to the runner
+       uses: actions/checkout@v2
+     - name: Setup Terraform with specified version on the runner
+       uses: hashicorp/setup-terraform@v2
+       with:
+         terraform_version: 1.3.7
+     - name: Terraform init
+       id: init
+       run: terraform init
+     - name: Terraform format
+       id: fmt
+       run: terraform fmt -check
+     - name: Terraform validate
+       id: validate
+       run: terraform validate
+     - name: Terraform plan
+       id: plan
+       if: github.event_name == 'pull_request'
+       run: terraform plan -var-file="topics.tfvars" --out planfile -input=false
+       continue-on-error: true
+     - name: Terraform Plan Status
+       if: steps.plan.outcome == 'failure'
+       run: exit 1
+     - name: Terraform Show
+       id: show
+       if: github.event_name == 'pull_request'
+       run: terraform show -var-file="topic.tfvars" -json planfile > plan.json
+       continue-on-error: true
+       
