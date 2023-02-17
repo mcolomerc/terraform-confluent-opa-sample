@@ -12,7 +12,9 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+env:
+ # verbosity setting for Terraform logs
+ TF_LOG: INFO
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   terraform:
@@ -52,4 +54,16 @@ jobs:
        if: github.event_name == 'pull_request'
        run: terraform show -var-file="topic.tfvars" -json planfile > plan.json
        continue-on-error: true
+     - name: Setup OPA
+       uses: open-policy-agent/setup-opa@v2
+       with:
+        version: latest  
+     - name: Run OPA 
+       run: |
+         result=$( opa exec --decision terraform/topics/deny  --bundle policy/ plan.json )
+         echo "OPA_RESULT=$result" >> "$GITHUB_ENV" 
+       if: github.event_name == 'pull_request'
+     - name: Check OPA 
+       run: echo "$OPA_RESULT"
        
+ 
