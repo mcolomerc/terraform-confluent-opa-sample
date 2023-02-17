@@ -42,23 +42,21 @@ jobs:
      - name: Terraform plan
        id: plan
        # if: github.event_name == 'pull_request'
-       run: terraform plan -var-file="topics.tfvars" --out planfile -input=false
-       continue-on-error: true
+       run: |
+         terraform plan -var-file="topics.tfvars" --out planfile -input=false
+         plan = $(terraform show -var-file="topic.tfvars" -json planfile)
+         echo "PLAN=$plan" >> "$GITHUB_ENV" 
+       continue-on-error: false
      - name: Terraform Plan Status
        if: steps.plan.outcome == 'failure'
        run: exit 1
-     - name: Terraform Show
-       id: show
-       # if: github.event_name == 'pull_request'
-       run: terraform show -var-file="topic.tfvars" -json planfile > plan.json
-       continue-on-error: true
      - name: Setup OPA
        uses: open-policy-agent/setup-opa@v2
        with:
         version: latest  
      - name: Run OPA 
        run: |
-         result=$( opa exec --decision terraform/topics/deny  --bundle policy/ plan.json )
+         result=$( opa exec --decision terraform/topics/deny  --bundle policy/ $PLAN )
          echo "OPA_RESULT=$result" >> "$GITHUB_ENV" 
        # if: github.event_name == 'pull_request'
      - name: Check OPA 
