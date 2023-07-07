@@ -15,7 +15,7 @@ serv_account = {
 
 topics = [
   {
-   name       = "opa_testing33"
+   name       = "opa_testing43"
    partitions = 3  
    config = {
      "cleanup.policy"                          = "delete"
@@ -24,7 +24,7 @@ topics = [
    }
   },
   {
-   name       = "opa_testing32"
+   name       = "opa_testing42"
    partitions = 4
    config = {
      "cleanup.policy"                          = "delete"
