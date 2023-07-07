@@ -15,7 +15,7 @@ serv_account = {
 
 topics = [
   {
-   name       = "opa_testing"
+   name       = "opa_testing33"
    partitions = 3  
    config = {
      "cleanup.policy"                          = "delete"
@@ -24,8 +24,8 @@ topics = [
    }
   },
   {
-   name       = "opa_testing2"
-   partitions = 10  
+   name       = "opa_testing32"
+   partitions = 3
    config = {
      "cleanup.policy"                          = "delete"
      "compression.type"                        = "producer"
