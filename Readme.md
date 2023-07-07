@@ -52,7 +52,7 @@ topics = [
 ```
 
 ```sh
-opa exec --decision terraform/topics/deny  --bundle policy/ plan.json
+opa eval data.terraform -d opa/policies/ -i plan.json -f pretty > opa.json
 ```
 
 Output:
@@ -88,20 +88,19 @@ topics = [
 ```
 
 ```sh
-opa exec --decision terraform/topics/deny  --bundle policy/ plan.json
+opa eval data.terraform -d opa/policies/ -i plan.json -f pretty > opa.json
 ```
 
 Output:
 
 ```json
 {
-  "result": [
-    {
-      "path": "plan.json",
-      "result": [
-        "Topic: opa_testing :: number of partitions 7 must be less than 5"
-      ]
-    }
+  "deny": [
+    "Topic: opa_testing2 :: number of partitions 10 must be less than 5"
+  ],
+  "max_partitions": 5,
+  "resource_types": [
+    "confluent_kafka_topic"
   ]
 }
 ```
