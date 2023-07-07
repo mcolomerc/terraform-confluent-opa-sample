@@ -55,7 +55,7 @@ jobs:
        run: |
           echo "approved=$(jq -e '.deny | length' opa.json)" >> $GITHUB_OUTPUT
      - name: Terraform apply
-       if: steps.check.outputs.approved == 0
+       if: github.event.pull_request.merged == true
        run: terraform apply -var-file="topics.tfvars" -input=false -auto-approve   
      - name: Check coverage tolerance
        if: steps.check.outputs.approved > 0 
