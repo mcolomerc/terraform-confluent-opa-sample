@@ -6,5 +6,5 @@ module "topics" {
     cluster = var.cluster
     rbac_enabled = var.rbac_enabled
     serv_account = var.serv_account
-    topics = var.topics
+    topics = var.topics 
 }

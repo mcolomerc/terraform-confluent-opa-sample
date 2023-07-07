@@ -12,59 +12,55 @@ on:
   workflow_dispatch:
 env:
  # verbosity setting for Terraform logs
- TF_LOG: INFO
+ # TF_LOG: INFO
  TF_VAR_confluent_cloud_api_key: ${{ secrets.CCLOUD_API_KEY }}
  TF_VAR_confluent_cloud_api_secret: ${{ secrets.CCLOUD_API_SECRET }}
  TF_VAR_environment: env-zmz2zd
  TF_VAR_cluster: lkc-v7omw0
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  terraform:
+  terraform-plan:
    name: "Terraform Infrastructure Change Management"
    runs-on: ubuntu-latest
+   outputs:
+    approved: ${{ steps.terraform-plan.outputs.approved }} 
    defaults:
      run:
        shell: bash
        # We keep Terraform files in the terraform directory.
-       working-directory: ./
+       working-directory: ./ 
    steps:
      - name: Checkout the repository to the runner
-       uses: actions/checkout@v2
+       uses: actions/checkout@v3
      - name: Setup Terraform with specified version on the runner
        uses: hashicorp/setup-terraform@v2
        with:
-         terraform_version: 1.3.7
+         terraform_version: 1.3.7   
+         terraform_wrapper: false
+     - name: Setup OPA
+       uses: open-policy-agent/setup-opa@v2
+       with:
+        version: latest
      - name: Terraform init
        id: init
        run: terraform init 
      - name: Terraform plan
        id: plan 
-       run: |
-         terraform plan -var-file="topics.tfvars" --out planfile -input=false
-         terraform show -json planfile > plan.json   
-       continue-on-error: false
-     - name: Terraform Plan Status
-       if: steps.plan.outcome == 'failure'
-       run: exit 1
-     - name: Setup OPA
-       uses: open-policy-agent/setup-opa@v2
-       with:
-        version: latest  
-     - name: Run OPA 
+       run: terraform plan -var-file="topics.tfvars" --out planfile -input=false && terraform show -json planfile > plan.json   
+     - name: Run OPA Tests
        id: opa
+       run: opa eval data.terraform -d opa/policies/ -i plan.json -f pretty > opa.json
+     - name: Check Opa Results
+       id: check 
        run: |
-         cat topics.tfvars
-         opa version
-         opa exec --decision terraform/topics/deny  --bundle policy/ plan.json > opa.json
-         cat opa.json
-         RESULT=`jq ".result[0].result | length" opa.json`
-         echo $RESULT
-         if [ "$RESULT" -gt "0" ]; then
-          jq '.result[0].result' opa.json
-          echo "OPA errors"
-          exit 1
-         fi
-     - name: Terraform Apply 
-       id: apply 
-       if: github.event.pull_request.merged == true
-       run: terraform apply -var-file="topics.tfvars" -auto-approve -input=false
+          echo "approved=$(jq -e '.deny | length' opa.json)" >> $GITHUB_OUTPUT
+     - name: Terraform apply
+       if: steps.check.outputs.approved == 0
+       run: terraform apply -var-file="topics.tfvars" -input=false -auto-approve   
+     - name: Check coverage tolerance
+       if: steps.check.outputs.approved > 0 
+       run: echo "::error::Opa policy check failed. Please check the policy file for more details." && exit 1
+            
+     
+    
+   

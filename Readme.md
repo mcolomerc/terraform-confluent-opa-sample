@@ -105,3 +105,14 @@ Output:
   ]
 }
 ```
+
+## Running GitHub actions locally with Act
+
+[Act](https://github.com/nektos/act)
+
+```sh
+brew install act
+```
+
+`act -s CCLOUD_API_KEY=<CLOUD_API_KEY>  -s CCLOUD_API_SECRET=<CLOUD_API_SECRET> pull_request`
+ 
