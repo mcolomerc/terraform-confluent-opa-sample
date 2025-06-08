@@ -1,7 +1,5 @@
 module "topics" {
-    source = "github.com/mcolomerc/terraform-confluent-topics"
-    confluent_cloud_api_key = var.confluent_cloud_api_key
-    confluent_cloud_api_secret = var.confluent_cloud_api_secret
+    source = "github.com/mcolomerc/terraform-confluent-topics" 
     environment = var.environment
     cluster = var.cluster
     rbac_enabled = var.rbac_enabled
