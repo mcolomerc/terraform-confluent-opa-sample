@@ -69,7 +69,7 @@ jobs:
          head -n 50 plan.json || echo "plan.json missing or empty"
      - name: Run OPA Tests
        id: opa
-       run: opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
+       run: opa eval 'data' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
      - name: Check Opa Results
        id: check 
        run: |
