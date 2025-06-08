@@ -8,7 +8,7 @@
 rbac_enabled = false 
 
 serv_account = {
-      name = "mcolomer-sa-man"
+      name = "mcolomer-admin"
       role = "CloudClusterAdmin"
 }
 
