@@ -31,5 +31,14 @@ topics = [
      "compression.type"                        = "producer"
      "delete.retention.ms"                     = "86400000" 
    }
+  },
+  {
+   name       = "opa_testing8"
+   partitions = 8
+   config = {
+     "cleanup.policy"                          = "delete"
+     "compression.type"                        = "producer"
+     "delete.retention.ms"                     = "86400000" 
+   }
   } 
 ]# end topics
