@@ -53,7 +53,20 @@ jobs:
        run: terraform init 
      - name: Terraform plan
        id: plan 
-       run: terraform plan -var-file="topics.tfvars" --out planfile -input=false && terraform show -json planfile > plan.json   
+       run: terraform plan -var-file="topics.tfvars" --out planfile -input=false && terraform show -json planfile > plan.json
+     - name: Debug OPA Inputs
+       run: |
+         echo "==> Current working dir:"
+         pwd
+         echo "==> Listing everything:"
+         find .
+         echo "==> Listing Rego files:"
+         ls -l opa/policies || echo "No policy folder"
+         cat opa/policies/*.rego || echo "No rego files found"
+         echo "==> plan.json exists?"
+         ls -l plan.json
+         echo "==> plan.json structure:"
+         jq '.' plan.json | head -n 30
      - name: Run OPA Tests
        id: opa
        run: opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
