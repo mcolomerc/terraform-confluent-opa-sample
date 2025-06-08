@@ -65,8 +65,8 @@ jobs:
          cat opa/policies/*.rego || echo "No rego files found"
          echo "==> plan.json exists?"
          ls -l plan.json
-         echo "==> plan.json structure:"
-         jq '.' plan.json | head -n 30
+         echo "==> plan.json structure (first 50 lines):"
+         head -n 50 plan.json || echo "plan.json missing or empty"
      - name: Run OPA Tests
        id: opa
        run: opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
