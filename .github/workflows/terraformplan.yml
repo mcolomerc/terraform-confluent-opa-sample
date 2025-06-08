@@ -60,7 +60,7 @@ jobs:
        id: opa
        run: |
           cat plan.json 
-          opa eval 'data' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
+          opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --format pretty > opa.json
           cat opa.json
      - name: Check Opa Results
        id: check 
