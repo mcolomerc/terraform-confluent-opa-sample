@@ -58,7 +58,9 @@ jobs:
        run: opa check opa/policies/
      - name: Run OPA Tests
        id: opa
-       run: opa eval 'data' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
+       run: |
+          opa eval 'data' -d opa/policies/ -i plan.json --fail-defined --format=json > opa.json
+          cat opa.json
      - name: Check Opa Results
        id: check 
        run: |
