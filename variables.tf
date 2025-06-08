@@ -9,6 +9,16 @@ variable "confluent_cloud_api_secret" {
    description = "Confluent Cloud API KEY. export TF_VAR_confluent_cloud_api_secret=\"API_SECRET\""
 }
 
+variable "kafka_api_key" {
+  type = string
+  description = "Kafka API KEY. export TF_VAR_"
+}
+
+variable "kafka_api_secret" {
+  type = string
+   description = "Kafka API SECRET. export TF_VAR_"
+}
+
 # Confluent cloud environment id  
 variable "environment" {
   type = string
