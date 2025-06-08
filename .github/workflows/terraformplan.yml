@@ -18,8 +18,10 @@ env:
  # TF_LOG: INFO
  TF_VAR_confluent_cloud_api_key: ${{ secrets.CCLOUD_API_KEY }}
  TF_VAR_confluent_cloud_api_secret: ${{ secrets.CCLOUD_API_SECRET }}
+ TF_VAR_kafka_api_key: ${{ secrets.KAFKA_API_KEY }}
+ TF_VAR_kafka_api_secret: ${{ secrets.KAFKA_API_SECRET }}
  TF_VAR_environment: env-zmz2zd
- TF_VAR_cluster: lkc-v7omw0
+ TF_VAR_cluster: lkc-8jnxpr
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   terraform-plan:
