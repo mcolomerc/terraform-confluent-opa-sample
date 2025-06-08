@@ -59,12 +59,12 @@ jobs:
      - name: Run OPA Tests
        id: opa
        run: | 
-          opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --format pretty > opa.json
+          opa eval 'data.terraform.deny' -d opa/policies/ -i plan.json --format=json > opa.json
           cat opa.json
      - name: Check Opa Results
        id: check 
        run: |
-         if jq -e '(.result[0].expressions[0].value | length) == 0 or (.result[0].expressions[0].value | type == "object" and (keys | length) == 0)' opa.json; then
+         if jq -e 'keys | length == 0' opa.json; then
            echo "approved=0" >> $GITHUB_OUTPUT
          else
            echo "approved=1" >> $GITHUB_OUTPUT
