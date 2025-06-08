@@ -64,7 +64,7 @@ jobs:
      - name: Check Opa Results
        id: check 
        run: |
-         if jq -e 'keys | length == 0' opa.json; then
+         if jq -e '.result[0].expressions[0].value | keys | length == 0' opa.json; then
            echo "approved=0" >> $GITHUB_OUTPUT
          else
            echo "approved=1" >> $GITHUB_OUTPUT
