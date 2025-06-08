@@ -15,7 +15,9 @@ on:
   workflow_dispatch:
 env:
  # verbosity setting for Terraform logs
- # TF_LOG: INFO
+ # TF_LOG: INFOk
+ CONFLUENT_CLOUD_API_KEY: ${{ secrets.CCLOUD_API_KEY }}
+ CONFLUENT_CLOUD_API_SECRET: ${{ secrets.CCLOUD_API_SECRET }}
  TF_VAR_confluent_cloud_api_key: ${{ secrets.CCLOUD_API_KEY }}
  TF_VAR_confluent_cloud_api_secret: ${{ secrets.CCLOUD_API_SECRET }}
  TF_VAR_kafka_api_key: ${{ secrets.KAFKA_API_KEY }}
